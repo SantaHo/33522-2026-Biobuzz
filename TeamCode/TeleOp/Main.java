@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name="USE AT COMP")
-public class Jacob3 extends OpMode {
+@TeleOp(name="BioBuzzTele")
+public class main extends OpMode {
     //region Hardware Declarations
     private DcMotor turret, intake, index;
     private DcMotor frontRight, frontLeft, backRight, backLeft;
