@@ -129,3 +129,6 @@ Note: Some names start with "Team" and others start with "team".  This is intent
 5)  Add:    include ':Team0417' to the "/settings.gradle" file.
     
 6)  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
+
+
+Erick > Jacob and Mikey and Horn and Alex and Austin and Ben and Boss and Clint and Colton and Easton and other eric and Ethan and Evan and Joe and Levi and Mason and Tim > Nikola (aka james)
