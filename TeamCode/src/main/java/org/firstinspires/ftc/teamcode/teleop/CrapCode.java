@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="new main ", group="Linear Opmode")
-public class Sparkanauts extends LinearOpMode {
+public class CrapCode extends LinearOpMode {
 
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     //private DcMotor Intake, flyWheelLeft, flyWheelRight;
@@ -46,7 +46,7 @@ public class Sparkanauts extends LinearOpMode {
             strafe = gamepad1.left_stick_y;
             forward = -gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
-            
+
             fl = -forward + strafe - rotate;
             bl = +forward + strafe - rotate;
             fr = -forward + strafe + rotate;
