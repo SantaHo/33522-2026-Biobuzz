@@ -26,10 +26,10 @@ public class CrapCode extends LinearOpMode {
 
 
         // --- Motor Directions ---
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);   // direct drive
-        frontRight.setDirection(DcMotor.Direction.REVERSE);  // direct drive
-        backLeft.setDirection(DcMotor.Direction.FORWARD);    // direct drive
-        backRight.setDirection(DcMotor.Direction.REVERSE);   // direct drive
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);   // Direct drive
+        frontRight.setDirection(DcMotor.Direction.REVERSE);  // Direct drive
+        backLeft.setDirection(DcMotor.Direction.FORWARD);    // Direct drive
+        backRight.setDirection(DcMotor.Direction.REVERSE);   // Direct drive
         double forward, strafe, rotate, turretPower, rpm, lastError, lastTime,tagDistanceInchs;
         double fl, fr, br, bl;
 
