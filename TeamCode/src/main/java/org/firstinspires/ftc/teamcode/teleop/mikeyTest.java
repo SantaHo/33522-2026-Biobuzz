@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+@Disabled
 @TeleOp(name="new main ", group="Linear Opmode")
 public class mikeyTest extends LinearOpMode {
 
@@ -20,7 +20,7 @@ public class mikeyTest extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode()  {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -36,6 +36,9 @@ public class mikeyTest extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.REVERSE);
         double forward, strafe, rotate;
         double fl,fr,bl,br;
+        final double STEP = 0.02;
+        double frp = 0,flp = 0,blp = 0,brp = 0;
+        double[] power = {frp,flp,blp,brp};
 
         // --- Run without encoders ---
         DcMotor[] motors = {frontLeft, backLeft, frontRight, backRight};
@@ -43,6 +46,7 @@ public class mikeyTest extends LinearOpMode {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         waitForStart();
+
 
         while(opModeIsActive()) {
             // assign values to variables associated with motor control
@@ -69,23 +73,8 @@ public class mikeyTest extends LinearOpMode {
                 fr *= 0.5;
                 br *= 0.5;
             }
-            //define variables for gradual motor change
-            // variables used as final power amount
-            double frp = 0,flp = 0,blp = 0,brp = 0;
-            // variable to control increase
-            final double STEP = 0.02;
-
-            double[] power = {frp,flp,blp,brp};
             double[] goal = {fr,fl,bl,br};
 
-//            double i = 0;
-//            int j=0;
-//            while (j < 4){
-//                while(goal[j]>power[j]){
-//                    power[j] += 0.001;
-//                }
-//                j+=1;
-//            }
             // has power gradually increase to what the power is supposed to be set as
             for (int j = 0; j < 4; j++) {
                 double diff = goal[j] - power[j];
