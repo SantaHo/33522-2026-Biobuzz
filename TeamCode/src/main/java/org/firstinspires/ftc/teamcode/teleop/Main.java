@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name="BioBuzzTele")
-public class main extends OpMode {
+public class Main extends OpMode {
     //region Hardware Declarations
     private DcMotor turret, intake, index;
     private DcMotor frontRight, frontLeft, backRight, backLeft;
