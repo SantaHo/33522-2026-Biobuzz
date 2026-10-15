@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-@Disabled
 @TeleOp(name="new main ", group="Linear Opmode")
 public class mikeyTest extends LinearOpMode {
 
+    boolean error = false; 
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     // deadzone method
     private double applyDeadzone(double input, double deadzone) {
@@ -61,10 +61,10 @@ public class mikeyTest extends LinearOpMode {
             br = forward + strafe + rotate;
             //increase motor power
             if(gamepad1.right_trigger_pressed){
-                fl *= 0.5;
-                bl *= 0.5;
-                fr *= 0.5;
-                br *= 0.5;
+                fl *= 2;
+                bl *= 2;
+                fr *= 2;
+                br *= 2;
             }
             //slow down motors
             else if(gamepad1.left_trigger_pressed){
