@@ -1,0 +1,59 @@
+**Title: Our $500 Robot Had ZERO Brain Cells 💀**
+
+Our robotics team spent an entire afternoon trying to teach a $500 robot how to do the one thing it was built for.
+
+Drive in a straight line.
+
+And somehow, it was losing.
+
+We programmed it to drive forward six feet. Easy, right?
+
+Wrong.
+
+The robot would drive forward, overshoot the target, reverse, overshoot again, and start shaking like it was having an actual mental breakdown.
+
+Our builder blamed the wheels.
+
+Our programmer blamed the motors.
+
+And one guy genuinely suggested that the floor was uneven.
+
+So, naturally, we spent another hour changing absolutely everything except the actual problem.
+
+Then our coach walked over, watched the robot zigzag across the room, and asked one question.
+
+"Have you guys tuned your PID?"
+
+Silence.
+
+Turns out, our robot was correcting itself WAY too aggressively.
+
+The proportional gain was so high that every tiny error made it overreact. It would turn too far, realize it messed up, and immediately overcorrect in the opposite direction.
+
+Basically, our robot had the driving skills of a sleep-deprived teenager.
+
+So we started tuning the PID values.
+
+Lowered the P gain. Tested it.
+
+Still overshooting.
+
+Adjusted the D gain. Tested it again.
+
+And suddenly, the robot drove almost perfectly straight.
+
+WE ACTUALLY DID IT.
+
+The entire team started celebrating like we'd just won the world championship.
+
+Then we ran our autonomous routine.
+
+The robot drove perfectly to its target, turned exactly ninety degrees, and lined itself up beautifully.
+
+And then it launched itself directly into a wall.
+
+Because we forgot to reverse one motor's direction.
+
+All that PID tuning...
+
+Just for our robot to discover a brand-new way to embarrass us.

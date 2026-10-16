@@ -79,3 +79,6 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+/video_creation/backgrounds/videos.gitignore
+/video_creation/output/.gitignore
+/video_creation/output/temp_backgrounds.gitignore
