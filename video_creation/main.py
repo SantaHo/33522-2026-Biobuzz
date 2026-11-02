@@ -21,31 +21,48 @@ from proglog import ProgressBarLogger
 ROOT = Path(__file__).parent
 
 STORY_FILE = ROOT / "stories" / "story.txt"
-BACKGROUND_DIR = ROOT / "backgrounds"
+BACKGROUND_DIR = ROOT / "backgrounds" / "videos.gitignore"
 OUTPUT_DIR = ROOT / "output"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 VOICE = "en-US-AndrewNeural"
 
+# ============================================================
+# VIDEO FORMAT
+# ============================================================
+
 # 720p 9:16 vertical
 WIDTH = 720
 HEIGHT = 1280
 
-# Audio
+FPS = 30
+
+# ============================================================
+# AUDIO
+# ============================================================
+
 NARRATION_VOLUME = 5.0
 
-# Change background every 10 seconds
+# ============================================================
+# BACKGROUND
+# ============================================================
+
+# Final background changes every 10 seconds
 CLIP_LENGTH = 10
 
-# Video
-FPS = 30
+# Background videos play at 2x speed
+BACKGROUND_SPEED = 2.0
+
+# ============================================================
+# ENCODING
+# ============================================================
 
 # Fastest x264 preset
 ENCODER_PRESET = "ultrafast"
 
-# Use every logical CPU thread
-THREADS = max(os.cpu_count(), 24)
+# Use ALL available logical CPU threads
+THREADS = os.cpu_count() or 1
 
 
 # ============================================================
@@ -195,8 +212,8 @@ def create_random_background(duration):
     while elapsed < duration:
 
         # ----------------------------------------------------
-        # Pick a random video.
-        # Never use the same video twice consecutively.
+        # Pick random video.
+        # Avoid same video twice in a row.
         # ----------------------------------------------------
 
         possible_files = [
@@ -244,18 +261,41 @@ def create_random_background(duration):
             continue
 
         # ----------------------------------------------------
-        # Determine clip length
+        # Because the video is 2x speed,
+        # we need twice as much source footage.
+        #
+        # Example:
+        #
+        # 20 seconds source
+        #       ↓ 2x
+        # 10 seconds final
         # ----------------------------------------------------
 
         remaining = duration - elapsed
 
-        clip_length = min(
+        final_clip_length = min(
             CLIP_LENGTH,
             remaining,
+        )
+
+        source_clip_length = (
+            final_clip_length *
+            BACKGROUND_SPEED
+        )
+
+        # Don't request more footage than exists
+        source_clip_length = min(
+            source_clip_length,
             source.duration,
         )
 
-        if clip_length <= 0:
+        # Calculate actual final duration
+        actual_final_duration = (
+            source_clip_length /
+            BACKGROUND_SPEED
+        )
+
+        if actual_final_duration <= 0:
             continue
 
         # ----------------------------------------------------
@@ -264,7 +304,8 @@ def create_random_background(duration):
 
         max_start = max(
             0,
-            source.duration - clip_length,
+            source.duration -
+            source_clip_length,
         )
 
         start_time = random.uniform(
@@ -274,13 +315,18 @@ def create_random_background(duration):
 
         end_time = (
             start_time +
-            clip_length
+            source_clip_length
         )
 
         print(
-            f"      Section: "
+            f"      Source section: "
             f"{start_time:.2f}s -> "
             f"{end_time:.2f}s"
+        )
+
+        print(
+            f"      Speed: "
+            f"{BACKGROUND_SPEED}x"
         )
 
         # ----------------------------------------------------
@@ -290,6 +336,14 @@ def create_random_background(duration):
         clip = source.subclip(
             start_time,
             end_time,
+        )
+
+        # ----------------------------------------------------
+        # Speed up background
+        # ----------------------------------------------------
+
+        clip = clip.speedx(
+            BACKGROUND_SPEED
         )
 
         # ----------------------------------------------------
@@ -304,11 +358,11 @@ def create_random_background(duration):
             clip
         )
 
-        elapsed += clip_length
+        elapsed += actual_final_duration
 
         print(
             f"      Added: "
-            f"{clip_length:.2f}s"
+            f"{actual_final_duration:.2f}s"
         )
 
         print(
@@ -328,14 +382,14 @@ def create_random_background(duration):
         "Combining background clips..."
     )
 
-    # Chain is faster than compose because every clip
-    # is already exactly 720x1280.
+    # All clips are already 720x1280,
+    # so chain is faster than compose.
     background = concatenate_videoclips(
         clips,
         method="chain",
     )
 
-    # Make exactly the narration length
+    # Make exactly narration length
     background = background.subclip(
         0,
         duration,
@@ -567,6 +621,11 @@ def create_video():
         )
 
         print(
+            f"Background speed: "
+            f"{BACKGROUND_SPEED}x"
+        )
+
+        print(
             f"Narration volume: "
             f"{NARRATION_VOLUME}x"
         )
@@ -597,10 +656,6 @@ def create_video():
         progress_logger = (
             NewLineProgressLogger()
         )
-
-        # ----------------------------------------------------
-        # MAXIMUM CPU ENCODING SPEED
-        # ----------------------------------------------------
 
         final.write_videofile(
 
@@ -658,7 +713,6 @@ def create_video():
             "Closing video files..."
         )
 
-        # Close final video
         if final is not None:
 
             try:
@@ -666,7 +720,6 @@ def create_video():
             except:
                 pass
 
-        # Close background
         if background is not None:
 
             try:
@@ -674,7 +727,6 @@ def create_video():
             except:
                 pass
 
-        # Close all source videos
         for source in source_videos:
 
             try:
@@ -682,7 +734,6 @@ def create_video():
             except:
                 pass
 
-        # Close audio
         try:
             audio.close()
         except:
