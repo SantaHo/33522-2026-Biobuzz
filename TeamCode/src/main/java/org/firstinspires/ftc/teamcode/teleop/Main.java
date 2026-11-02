@@ -308,7 +308,7 @@ public class Main extends OpMode {
             blocker.setPosition(1);
             flicker.setPosition(0.6);
         }
-        if(isShooting == false){
+        if(!isShooting){
             blocker.setPosition(1);
         }
         if(!(gamepad1.left_trigger  > .1)){
