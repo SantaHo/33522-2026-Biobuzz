@@ -1,4 +1,4 @@
-
+//This code does stuff
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 public class RealMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     private DcMotorEx turret;
+    private DcMotor indexer;
     private DcMotor intake;
     private DcMotor shooter;
     private Servo hood;
@@ -41,6 +42,7 @@ public class RealMain extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        indexer = hardwareMap.get(DcMotor.class, "indexer");
         turret = hardwareMap.get(DcMotorEx.class, "turret");
         intake = hardwareMap.get(DcMotor.class, "intake");
         shooter = hardwareMap.get(DcMotor.class, "shooter");
@@ -53,6 +55,12 @@ public class RealMain extends OpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);  // Direct drive
         backLeft.setDirection(DcMotor.Direction.FORWARD);    // Direct drive
         backRight.setDirection(DcMotor.Direction.REVERSE);   // Direct drive
+
+        //Run Without Encoders
+        DcMotor[] motors = {intake, indexer};
+        for (DcMotor m : motors) {
+            m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -81,6 +89,7 @@ public class RealMain extends OpMode {
 
             if (Math.abs(error) > DEADZONE) {
                 power = KP * error;
+
 
                 //Limit motor power
                 power = Math.max(
@@ -117,22 +126,35 @@ public class RealMain extends OpMode {
             gamepad1.rumble(50); //Rumble when intake toggles
         }
 
-        // Motor control
+        //Intake & Indexer Motor control
         if (gamepad1.b) {
-            intake.setPower(-0.5); //Reverse intake
+            intake.setPower(-0.5);  //Reverse intake
+            indexer.setPower(-0.5); //Reverse indexer to eject
         } else if (intakeOn) {
-            intake.setPower(0.5);  //Normal intake
+            intake.setPower(0.5);
+            indexer.setPower(0.5);
         } else {
-            intake.setPower(0);    //Stop intake
+            intake.setPower(0);
+            indexer.setPower(0);
         }
-
         lastA = gamepad1.a;
 
-        //Shooter
-        if (gamepad1.right_bumper) {
+        //Shooter and Indexer
+        boolean Shoot = gamepad1.right_bumper || gamepad1.x;
+
+        if (Shoot) {
             shooter.setPower(0.5);
+
+            boolean targetAcquired = (result != null && result.isValid() && Math.abs(result.getTx()) < 1.5);
+
+            if (gamepad1.x || targetAcquired) {
+                indexer.setPower(0.5);
+            } else {
+                indexer.setPower(0);
+            }
         } else {
             shooter.setPower(0);
+            indexer.setPower(0);
         }
 
         //Hood
@@ -182,6 +204,7 @@ public class RealMain extends OpMode {
         backLeft.setPower(0);
         frontRight.setPower(0);
         backRight.setPower(0);
+        indexer.setPower(0);
         turret.setPower(0);
         intake.setPower(0);
         shooter.setPower(0);
