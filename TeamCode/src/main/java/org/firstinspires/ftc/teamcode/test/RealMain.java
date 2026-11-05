@@ -1,4 +1,5 @@
 //This code does stuff
+
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -13,13 +14,13 @@ import com.qualcomm.robotcore.hardware.IMU;
 @TeleOp(name = "RealMain", group = "Linear Opmode")
 public class RealMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
-    private DcMotorEx turret;
+    private DcMotor turret;
     private DcMotor indexer;
     private DcMotor intake;
-    private DcMotor shooter;
+    private DcMotorEx flywheel;
     private Servo hood;
     private Limelight3A limelight;
-    private IMU imu;
+    private IMU imu; 
 
     //Drive variables
     double forward, strafe, rotate;
@@ -43,10 +44,10 @@ public class RealMain extends OpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         indexer = hardwareMap.get(DcMotor.class, "indexer");
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
+        //turret = hardwareMap.get(DcMotorEx.class, "turret");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        shooter = hardwareMap.get(DcMotor.class, "shooter");
-        hood = hardwareMap.get(Servo.class, "hood");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        //hood = hardwareMap.get(Servo.class, "hood");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         imu = hardwareMap.get(IMU.class, "imu");
 
@@ -57,7 +58,7 @@ public class RealMain extends OpMode {
         backRight.setDirection(DcMotor.Direction.REVERSE);   // Direct drive
 
         //Run Without Encoders
-        DcMotor[] motors = {intake, indexer};
+        DcMotor[] motors = {intake, indexer, frontLeft, frontRight, backLeft, backRight};
         for (DcMotor m : motors) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -81,6 +82,7 @@ public class RealMain extends OpMode {
         LLResult result = limelight.getLatestResult();
 
         //Turret Control (Limelight Aim)
+        /*
         if (result != null && result.isValid()) {
             double tx = result.getTx();
             double error = tx;
@@ -117,6 +119,7 @@ public class RealMain extends OpMode {
             telemetry.addData("Target", "Not visible");
             telemetry.addData("Turret Power", 0);
         }
+        */
 
         //Intake
         boolean aPressed = gamepad1.a && !lastA;
@@ -143,7 +146,7 @@ public class RealMain extends OpMode {
         boolean Shoot = gamepad1.right_bumper || gamepad1.x;
 
         if (Shoot) {
-            shooter.setPower(0.5);
+            flywheel.setPower(0.5);
 
             boolean targetAcquired = (result != null && result.isValid() && Math.abs(result.getTx()) < 1.5);
 
@@ -153,16 +156,18 @@ public class RealMain extends OpMode {
                 indexer.setPower(0);
             }
         } else {
-            shooter.setPower(0);
+            flywheel.setPower(0);
             indexer.setPower(0);
         }
 
         //Hood
+        /*
         if (gamepad1.left_bumper) {
             hood.setPosition(0.5);
         } else {
             hood.setPosition(0);
         }
+        */
 
         //region DRIVE CONTROL
         strafe = gamepad1.left_stick_x;
@@ -205,10 +210,10 @@ public class RealMain extends OpMode {
         frontRight.setPower(0);
         backRight.setPower(0);
         indexer.setPower(0);
-        turret.setPower(0);
+        //turret.setPower(0);
         intake.setPower(0);
-        shooter.setPower(0);
-        hood.setPosition(0);
+        flywheel.setPower(0);
+        //hood.setPosition(0);
         limelight.stop();
         telemetry.addData("Status", "Stopped");
         telemetry.update();
