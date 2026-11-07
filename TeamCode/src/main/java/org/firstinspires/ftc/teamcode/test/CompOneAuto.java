@@ -46,9 +46,9 @@ public class CompOneAuto extends LinearOpMode {
 
             //Shoot Preload
             flywheel.setPower(1);
-            sleep(750);
-            intake.setPower(1);
-            index.setPower(0);
+            sleep(1700);
+            intake.setPower(-1);
+            index.setPower(1);
             sleep(5000);
 
             flywheel.setPower(0);
@@ -60,36 +60,37 @@ public class CompOneAuto extends LinearOpMode {
             frontRight.setPower(1);
             backLeft.setPower(1);
             backRight.setPower(1);
-            sleep(2000);
+            sleep(300);
 
             stopDrive();
 
+            /*
             //Strafe Right
-            frontLeft.setPower(-0.5);
-            frontRight.setPower(-0.5);
-            backLeft.setPower(0.5);
-            backRight.setPower(0.5);
+            frontLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backLeft.setPower(-0.5);
+            backRight.setPower(-0.5);
             sleep(7000);
 
             stopDrive();
 
             //Move away from wall
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
-            backLeft.setPower(-1);
-            backRight.setPower(-1);
-            sleep(500);
-
-            stopDrive();
-
-            //Drive to park
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
+            frontLeft.setPower(-1);
+            frontRight.setPower(-1);
             backLeft.setPower(1);
             backRight.setPower(1);
             sleep(500);
 
             stopDrive();
+
+            //Drive to park
+            frontLeft.setPower(-1);
+            frontRight.setPower(-1);
+            backLeft.setPower(-1);
+            backRight.setPower(-1);
+            sleep(500);
+
+            stopDrive();*/
         }
     }
 

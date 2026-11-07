@@ -1,5 +1,3 @@
-//This code does stuff
-
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -14,7 +12,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 @TeleOp(name = "RealMain", group = "Linear Opmode")
 public class RealMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
-    private DcMotor intake;
+    private DcMotor intake, index;
     private DcMotor flywheel;
     private Servo hood;
     private Limelight3A limelight;
@@ -24,15 +22,13 @@ public class RealMain extends OpMode {
     double forward, strafe, rotate, hoodpos, hoodstick;
     double fl, fr, br, bl;
 
-    //Turret variables
-    //private static final double KP = 0.015;
-    //private static final double DEADZONE = 1.0;
-    //p/rivate static final double MAX_POWER = 0.3; //CHANGE ONCE BUILT, this is max power of turret motor
-    //pivate static final double MIN_POWER = 0.02; //However much is needed, this is for friction
-
     //Intake variables
-    private boolean lastA = false;
+    private boolean lastX = false;
     private boolean intakeOn = false;
+
+    //Index variables
+    private boolean lastA = false;
+    private boolean indexOn = false;
 
     @Override
     public void init() {
@@ -41,8 +37,7 @@ public class RealMain extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
-        //indexer = hardwareMap.get(DcMotor.class, "indexer");
-        //turret = hardwareMap.get(DcMotorEx.class, "turret");
+        index = hardwareMap.get(DcMotor.class, "index");
         intake = hardwareMap.get(DcMotor.class, "intake");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         hood = hardwareMap.get(Servo.class, "hood");
@@ -60,11 +55,6 @@ public class RealMain extends OpMode {
         for (DcMotor m : motors) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-
-
-
-
-        //turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -93,86 +83,53 @@ public class RealMain extends OpMode {
 
         LLResult result = limelight.getLatestResult();
 
-        //Turret Control (Limelight Aim)
-        /*
-        if (result != null && result.isValid()) {
-            double tx = result.getTx();
-            double error = tx;
+        //Intake Toggle (X Button)
+        boolean xPressed = gamepad1.x && !lastX;
 
-            double power = 0;
-
-            if (Math.abs(error) > DEADZONE) {
-                power = KP * error;
-
-
-                //Limit motor power
-                power = Math.max(
-                        -MAX_POWER,
-                        Math.min(MAX_POWER, power)
-                );
-
-                //Minimum power for friction
-                if (Math.abs(power) < MIN_POWER) {
-                    power = Math.signum(power) * MIN_POWER;
-                }
-
-                //MAKE -power IF REVERSED
-                turret.setPower(power);
-            } else {
-                turret.setPower(0);
-            }
-
-            telemetry.addData("Target", "Visible");
-            telemetry.addData("tx", tx);
-            telemetry.addData("Turret Power", turret.getPower());
-
-        } else {
-            turret.setPower(0);
-            telemetry.addData("Target", "Not visible");
-            telemetry.addData("Turret Power", 0);
-        }
-        */
-
-        //Intake
-        boolean aPressed = gamepad1.x && !lastA;
-
-        if (aPressed) {
+        if (xPressed) {
             intakeOn = !intakeOn;
             gamepad1.rumble(50); //Rumble when intake toggles
         }
+        lastX = gamepad1.x;
 
-
-        //Intake & Indexer Motor control
+        //Intake & Reverse Control
         if (gamepad1.b) {
-            intake.setPower(1);  //Reverse intake
+            intake.setPower(1);  // Reverse intake
         } else if (intakeOn) {
             intake.setPower(-1);
         } else {
             intake.setPower(0);
         }
-        lastA = gamepad1.x;
+
+        //Index Toggle (A Button)
+        boolean aPressed = gamepad1.a && !lastA;
+
+        if (aPressed) {
+            indexOn = !indexOn;
+        }
+        lastA = gamepad1.a;
+
+        //Index Motor Control
+        if (indexOn) {
+            index.setPower(0.5);
+        } else {
+            index.setPower(0);
+        }
 
         //Shooter and Indexer
-        //boolean Shoot = gamepad1.righttrigger;
-
-
-        if (gamepad1.right_trigger>0) {
-            flywheel.setPower(-1.5);
-
-            //boolean targetAcquired = (result != null && result.isValid() && Math.abs(result.getTx()) < 1.5);
-
-            //if (gamepad1.x) {
-            //indexer.setPower(0.5);
-            //} else {
-            //indexer.setPower(0);
-            //}
-        } else if (gamepad1.left_trigger>0) {
+        /*
+        if (gamepad1.right_trigger > 0) {
+            flywheel.setPower(-1.0);
+        } else if (gamepad1.left_trigger > 0) {
             flywheel.setPower(0.5);
         } else {
             flywheel.setPower(0);
-            //indexer.setPower(0);
-        }
+        }*/
 
+        flywheel.setPower(0.75);
+        if (gamepad1.left_trigger>0){
+            flywheel.setPower(-0.5);
+        }
 
         //region DRIVE CONTROL
         strafe = -gamepad1.left_stick_x;
@@ -216,6 +173,7 @@ public class RealMain extends OpMode {
         frontRight.setPower(0);
         backRight.setPower(0);
         intake.setPower(0);
+        index.setPower(0);
         flywheel.setPower(0);
         //limelight.stop();
         telemetry.addData("Status", "Stopped");
