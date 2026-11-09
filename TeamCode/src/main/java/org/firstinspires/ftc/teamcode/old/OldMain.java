@@ -1,16 +1,14 @@
-package org.firstinspires.ftc.teamcode.test;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.IMU;
 
 @TeleOp(name = "RealMain", group = "Linear Opmode")
-public class RealMain extends OpMode {
+public class OldMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     private DcMotor intake, index;
     private DcMotor flywheel;
@@ -21,10 +19,6 @@ public class RealMain extends OpMode {
     //Drive variables
     double forward, strafe, rotate, hoodpos, hoodstick;
     double fl, fr, br, bl;
-
-    //Intake variables
-    private boolean lastX = false;
-    private boolean intakeOn = false;
 
     //Index variables
     private boolean lastA = false;
@@ -71,32 +65,23 @@ public class RealMain extends OpMode {
     public void loop() {
         telemetry.addData("Status", "Running: " + hoodpos);
 
-        // Read joystick input
+        //Read joystick input
         hoodstick = gamepad1.right_stick_y;
 
-        // Hood Control (moves smoothly with the stick and stays within valid 0.0 to 1.0 servo bounds)
+        //Hood Control (moves smoothly with the stick and stays within valid 0.0 to 1.0 servo bounds)
         if (Math.abs(hoodstick) > 0.1) {
-            hoodpos -= hoodstick * 0.005; // Adjust 0.005 to change speed
-            hoodpos = Math.max(0.3, Math.min(0.99, hoodpos)); // Clamp to valid servo range
+            hoodpos -= hoodstick * 0.005; //Adjust 0.005 to change speed
+            hoodpos = Math.max(0.3, Math.min(0.99, hoodpos)); //Clamp to valid servo range
         }
         //hood.setPosition(hoodpos);
 
         LLResult result = limelight.getLatestResult();
 
-        //Intake Toggle (X Button)
-        boolean xPressed = gamepad1.x && !lastX;
-
-        if (xPressed) {
-            intakeOn = !intakeOn;
-            gamepad1.rumble(50); //Rumble when intake toggles
-        }
-        lastX = gamepad1.x;
-
-        //Intake & Reverse Control
+        //Intake Control
         if (gamepad1.b) {
-            intake.setPower(1);  // Reverse intake
-        } else if (intakeOn) {
-            intake.setPower(-1);
+            intake.setPower(1);  //Reverse intake
+        } else if (gamepad1.x) {
+            intake.setPower(-1); //Intake
         } else {
             intake.setPower(0);
         }
@@ -116,18 +101,8 @@ public class RealMain extends OpMode {
             index.setPower(0);
         }
 
-        //Shooter and Indexer
-        /*
-        if (gamepad1.right_trigger > 0) {
-            flywheel.setPower(-1.0);
-        } else if (gamepad1.left_trigger > 0) {
-            flywheel.setPower(0.5);
-        } else {
-            flywheel.setPower(0);
-        }*/
-
         flywheel.setPower(0.75);
-        if (gamepad1.left_trigger>0){
+        if (gamepad1.left_trigger > 0) {
             flywheel.setPower(-0.5);
         }
 
