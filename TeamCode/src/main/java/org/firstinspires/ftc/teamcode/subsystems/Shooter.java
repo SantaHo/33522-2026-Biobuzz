@@ -15,7 +15,6 @@ public class Shooter {
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         hood = hardwareMap.get(Servo.class, "hood");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
