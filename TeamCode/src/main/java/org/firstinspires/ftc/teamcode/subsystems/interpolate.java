@@ -26,7 +26,7 @@ public class interpolate {
 
         return 0;
     }
-    public double rpm (double x) {
+    public double rpm(double x) {
         // Known data points (must be sorted in ascending order of x)
         double[] preX = new double[]{0, 1, 2, 3};
         double[] preY = new double[]{0, 1, 2, 3};
