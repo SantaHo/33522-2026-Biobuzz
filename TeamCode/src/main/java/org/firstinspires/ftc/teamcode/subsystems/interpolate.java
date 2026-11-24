@@ -1,7 +1,28 @@
 
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+
 public class interpolate {
+    public double distanceFromTag(LLResult llresult) {
+        if (llresult != null && llresult.isValid()) {
+            double ty = llresult.getTy();
+
+            double LLAngle = 30.0; //angle
+            double tagHeight = 1359.0;
+            double LLHeight = 275.4; //Height from floor to limelight
+            double LIMELIGHTCONSTANT = 0.0; //idk ben had this
+
+            double theta = Math.toRadians(LLAngle - ty);
+            double heightDiff = tagHeight - LLHeight;
+            double distMm = heightDiff / Math.tan(theta);
+
+            //Convert to inches
+            return (distMm / 25.4) - LIMELIGHTCONSTANT;
+        }
+        return -1;
+    }
+
     public double hood(double x) {
         // Known data points (must be sorted in ascending order of x)
         double[] preX = new double[]{0, 1, 2, 3};
@@ -26,7 +47,8 @@ public class interpolate {
 
         return 0;
     }
-    public double rpm (double x) {
+
+    public double rpm(double x) {
         // Known data points (must be sorted in ascending order of x)
         double[] preX = new double[]{0, 1, 2, 3};
         double[] preY = new double[]{0, 1, 2, 3};
