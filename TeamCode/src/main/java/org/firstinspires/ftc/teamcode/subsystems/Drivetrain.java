@@ -36,10 +36,10 @@ public class Drivetrain {
         double fl, bl, fr, br;
 
         //Mecanum Math
-        fl = +forward + strafe - rotate;
-        bl = +forward - strafe - rotate;
-        fr = +forward - strafe + rotate;
-        br = +forward + strafe + rotate;
+        fl = -forward - strafe - rotate;
+        bl = +forward - strafe + rotate;
+        fr = -forward + strafe + rotate;
+        br = +forward + strafe - rotate;
 
         //Normalize motor powers
         double max = Math.max(1.0, Math.max(
