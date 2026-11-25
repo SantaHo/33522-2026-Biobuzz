@@ -19,9 +19,9 @@ public class MikeytestAuto extends LinearOpMode {
 
         waitForStart();
 
-        robot.shoot(1,5000);
+        //robot.shoot(1,5000);
 
-        robot.drive_forward(1,300);
+        robot.drive_forward(1,1000);
 
     }
 
