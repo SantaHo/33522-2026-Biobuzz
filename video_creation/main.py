@@ -55,11 +55,15 @@ CLIP_LENGTH = 10
 BACKGROUND_SPEED = 2.0
 
 # ============================================================
-# ENCODING
+# ENCODING (CUDA & CPU)
 # ============================================================
 
+# Use NVIDIA GPU NVENC preset for CUDA acceleration 
 # Fastest x264 preset
 ENCODER_PRESET = "ultrafast"
+
+# Video codec for CPU encoding
+VIDEO_CODEC = "libx264"
 
 # Use ALL available logical CPU threads
 THREADS = os.cpu_count() or 1
@@ -263,12 +267,6 @@ def create_random_background(duration):
         # ----------------------------------------------------
         # Because the video is 2x speed,
         # we need twice as much source footage.
-        #
-        # Example:
-        #
-        # 20 seconds source
-        #       ↓ 2x
-        # 10 seconds final
         # ----------------------------------------------------
 
         remaining = duration - elapsed
@@ -382,8 +380,6 @@ def create_random_background(duration):
         "Combining background clips..."
     )
 
-    # All clips are already 720x1280,
-    # so chain is faster than compose.
     background = concatenate_videoclips(
         clips,
         method="chain",
@@ -602,7 +598,7 @@ def create_video():
 
         print()
         print(
-            "[5/6] Rendering video..."
+            "[5/6] Rendering video with CUDA (NVENC)..."
         )
 
         print()
@@ -631,8 +627,11 @@ def create_video():
         )
 
         print(
-            f"Using ALL available CPU "
-            f"threads: {THREADS}"
+            f"Using CPU threads: {THREADS}"
+        )
+
+        print(
+            f"Video Codec: {VIDEO_CODEC}"
         )
 
         print(
@@ -663,7 +662,7 @@ def create_video():
 
             fps=FPS,
 
-            codec="libx264",
+            codec=VIDEO_CODEC,
 
             audio_codec="aac",
 
