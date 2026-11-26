@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.test;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.subsystems.interpolate;
 
+@TeleOp(name = "interpolTest1", group = "TeleOp")
 public class interpolTest {
     public class interpoltest extends OpMode {
         Limelight3A limelight;
@@ -24,6 +26,10 @@ public class interpolTest {
             telemetry.addData("Speed: ",interpolate.rpm(llresult.getTy()));
             telemetry.addData("TA: ",llresult.getTy());
             flywheel.setPower(interpolate.rpm(llresult.getTy()));
+
+            if (llresult.isValid()){
+                telemetry.addData("Its valid","valid");
+            }
         }
     }
 
