@@ -10,10 +10,6 @@ public class Turret {
     private Limelight3A limelight;
 
     //TUNE
-    private static final double KP = 0.015;
-    private static final double DEADZONE = 1.0;
-    private static final double MAX_POWER = 0.3;
-    private static final double MIN_POWER = 0.08;
 
     //Hardware
     public Turret(HardwareMap hardwareMap) {
@@ -25,16 +21,17 @@ public class Turret {
 
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+}
 
     //Limelight Aim
-    public void updateAim() {
-        LLResult result = limelight.getLatestResult();
+   // public void updateAim() {
+       // LLResult result = limelight.getLatestResult();
 
-        if (result != null && result.isValid()) {
-            double tx = result.getTx();
-            double error = tx;
-            double power = 0;
-
+       // if (result != null && result.isValid()) {
+            //double tx = result.getTx();
+            //double error = tx;
+            //double power = 0;
+/*
             if (Math.abs(error) > DEADZONE) {
                 power = KP * error;
 
@@ -65,4 +62,4 @@ public class Turret {
         turret.setPower(0);
         limelight.stop();
     }
-}
+} */

@@ -10,10 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "RealMain", group = "Linear Opmode")
 public class OldMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
-    private DcMotor intake, index;
+    private DcMotor intake, index, turret;
     private DcMotor flywheel;
     private Servo hood;
     private Limelight3A limelight;
+    private static final double KP = 0.015;
+    private static final double DEADZONE = 1.0;
+    private static final double MAX_POWER = 0.3;
+    private static final double MIN_POWER = 0.08;
     //private IMU imu;
 
     //Drive variables
@@ -31,6 +35,7 @@ public class OldMain extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        turret = hardwareMap.get(DcMotor.class, "turret");
         index = hardwareMap.get(DcMotor.class, "index");
         intake = hardwareMap.get(DcMotor.class, "intake");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
@@ -96,9 +101,9 @@ public class OldMain extends OpMode {
 
         //Index Motor Control
         if (indexOn) {
-            index.setPower(0.5);
-        } else {
             index.setPower(0);
+        } else {
+            index.setPower(1);
         }
 
         flywheel.setPower(0.75);
@@ -139,6 +144,31 @@ public class OldMain extends OpMode {
         telemetry.addData("Back Left", bl);
         telemetry.addData("Back Right", br);
         telemetry.update();
+
+
+        if (result != null && result.isValid()) {
+            double tx = result.getTx();
+            double error1 = tx;
+            double power = 0;
+
+            if (Math.abs(error1) > DEADZONE) {
+                power = KP * error1;
+
+                //Limit motor power
+                power = Math.max(-MAX_POWER, Math.min(MAX_POWER, power));
+
+                //Minimum power to overcome friction
+                if (Math.abs(power) < MIN_POWER) {
+                    power = Math.signum(power) * MIN_POWER;
+                }
+
+                turret.setPower(power);
+            } else {
+                turret.setPower(0);
+            }
+        } else {
+            turret.setPower(0);
+        }
     }
 
     @Override
