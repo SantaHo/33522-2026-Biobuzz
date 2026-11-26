@@ -23,7 +23,7 @@ public class interpolate {
         return -1;
     }
 
-    public double hood(double x) {
+    public static double hood(double x) {
         // Known data points (must be sorted in ascending order of x)
         double[] preX = new double[]{0, 1, 2, 3};
         double[] preY = new double[]{0, 1, 2, 3};
@@ -47,7 +47,7 @@ public class interpolate {
 
         return 0;
     }
-    public double rpm (double x) {
+    public static double rpm(double x) {
         // Known data points (must be sorted in ascending order of x)
         double[] preX = new double[]{0, 1, 2, 3};
         double[] preY = new double[]{0, 1, 2, 3};

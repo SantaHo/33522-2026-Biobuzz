@@ -15,7 +15,7 @@ public class RealMain extends LinearOpMode {
     public void runOpMode() {
         //HardwareMap stuff
         //FieldCentricDrivetrain FieldCentricDrivetrain = new FieldCentricDrivetrain(hardwareMap);
-        FieldCentricDrivetrain resetYaw = new FieldCentricDrivetrain(hardwareMap);
+        FieldCentricDrivetrain fielddrivetrain = new FieldCentricDrivetrain(hardwareMap);
         Drivetrain drivetrain = new Drivetrain(hardwareMap);
         Turret turret = new Turret(hardwareMap);
         Shooter shooter = new Shooter(hardwareMap);
@@ -35,13 +35,13 @@ public class RealMain extends LinearOpMode {
 
             drivetrain.drive(forward, strafe, rotate);
 
-            /**
+
             boolean resetfieldcentric  = gamepad1.a;
-            if (resetfieldcentric) {) {
-                FieldCentricDrivetrain.resetyaw();
+            if (resetfieldcentric) {
+                fielddrivetrain.resetYaw();
 
             }
-             **/
+
             //Turret and Shooter
             //Placeholder stuff
             boolean error = false; // :]
