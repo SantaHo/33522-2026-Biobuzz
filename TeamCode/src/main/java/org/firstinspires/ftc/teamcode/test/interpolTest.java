@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.subsystems.interpolate;
 
 public class interpolTest {
-    public class LimelightTest extends OpMode {
+    public class interpoltest extends OpMode {
         Limelight3A limelight;
         interpolate test = new interpolate();
         LLResult llresult;
