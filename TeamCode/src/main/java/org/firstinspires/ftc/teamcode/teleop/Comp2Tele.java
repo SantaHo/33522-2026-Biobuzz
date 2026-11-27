@@ -22,7 +22,7 @@ public class Comp2Tele extends LinearOpMode {
     private Servo intake1,intake2;
 
     //Turret control constants
-    private static final double KP = 0.015;
+    private static final double KP = 1.0;
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
     private static final double MIN_POWER = 0.08;
@@ -69,7 +69,7 @@ public class Comp2Tele extends LinearOpMode {
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         //Map Turret and Limelight
-        turret = hardwareMap.get(DcMotor.class, "motor");
+        turret = hardwareMap.get(DcMotor.class, "turret");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -81,12 +81,14 @@ public class Comp2Tele extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
-            double intake1angle = intake1.getPosition();
-            double intake2angle = intake2.getPosition();
-            intake1.setPosition(intake1angle - 90);
-            intake2.setPosition(intake2angle - 90);
+        //double intake1angle = intake1.getPosition();
+        //double intake2angle = intake2.getPosition();
+        intake1.setPosition(0);
+        intake2.setPosition(0);
+        intake1.setPosition(-90);
+        intake2.setPosition(90);
 
+        while (opModeIsActive()) {
             //Driving (Robot-centric tank/arcade style)
             double strafe = -gamepad1.left_stick_x;
             double forward = gamepad1.left_stick_y;
@@ -118,11 +120,9 @@ public class Comp2Tele extends LinearOpMode {
             }
 
             //Index control (toggle with A button)
-            boolean aPressed = gamepad1.a && !lastA;
-            if (aPressed) {
-                indexOn = !indexOn;
+            if (gamepad1.a) {
+                indexOn = true;
             }
-            lastA = gamepad1.a;
 
             boolean rightTriggerPressed = (gamepad1.right_trigger > 0.1);
 
@@ -131,7 +131,7 @@ public class Comp2Tele extends LinearOpMode {
             } else if (rightTriggerPressed) {
                 index.setPower(1.0);
             } else {
-                index.setPower(0.5);
+                index.setPower(0);
             }
 
             //Limelight target check for shooter and turret tracking
@@ -140,9 +140,9 @@ public class Comp2Tele extends LinearOpMode {
 
             //Flywheel spin up if valid target OR right trigger pressed
             if (hasValidTarget || rightTriggerPressed) {
-                flywheel.setPower(0.8);
+                //flywheel.setPower(0.65);
             } else {
-                flywheel.setPower(0.2);
+                //flywheel.setPower(0.2);
             }
 
             //Turret tracking logic using Limelight tx
@@ -159,7 +159,7 @@ public class Comp2Tele extends LinearOpMode {
                         power = Math.signum(power) * MIN_POWER;
                     }
 
-                    turret.setPower(power);
+                    turret.setPower(-power);
                 } else {
                     turret.setPower(0);
                 }
