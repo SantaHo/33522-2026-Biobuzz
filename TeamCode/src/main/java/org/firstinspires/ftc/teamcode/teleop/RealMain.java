@@ -11,7 +11,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.intakeindex;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 
 
 
@@ -26,6 +28,8 @@ public class RealMain extends LinearOpMode {
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
     private static final double MIN_POWER = 0.08;
+    private boolean lastA = false;
+    private boolean indexOn = false;
 
     @Override
     public void runOpMode() {
@@ -35,6 +39,7 @@ public class RealMain extends LinearOpMode {
         //FieldCentricDrivetrain FieldCentricDrivetrain = new FieldCentricDrivetrain(hardwareMap);
         FieldCentricDrivetrain fielddrivetrain = new FieldCentricDrivetrain(hardwareMap);
         Drivetrain drivetrain = new Drivetrain(hardwareMap);
+        intakeindex intakeindex = new intakeindex(hardwareMap);
         //Turret turret = new Turret(hardwareMap);
 
 
@@ -59,11 +64,36 @@ public class RealMain extends LinearOpMode {
 
             drivetrain.drive(forward, strafe, rotate);
 
-
-            boolean resetfieldcentric  = gamepad1.a;
+            //reset field centric heading
+            boolean resetfieldcentric  = gamepad1.dpad_up;
             if (resetfieldcentric) {
                 fielddrivetrain.resetYaw();
 
+            }
+
+            //intake
+            if (gamepad1.b) {
+                intakeindex.intakereverse(1);//Reverse intake
+            } else if (gamepad1.x) {
+                intakeindex.intake(1);
+                //Intake
+            } else {
+                intakeindex.stopintake();
+
+            }
+
+            //index control
+            boolean aPressed = gamepad1.a && !lastA;
+
+            if (aPressed) {
+                indexOn = !indexOn;
+            }
+            lastA = gamepad1.a;
+
+            if (indexOn) {
+                intakeindex.index(1);
+            } else {
+                intakeindex.index(0);
             }
 
             //Turret and Shooter
