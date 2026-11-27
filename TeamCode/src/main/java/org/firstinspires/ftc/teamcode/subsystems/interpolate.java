@@ -8,9 +8,9 @@ public class interpolate {
         if (llresult != null && llresult.isValid()) {
             double ty = llresult.getTy();
 
-            double LLAngle = 30.0; //angle
+            double LLAngle = 25.0; //angle
             double tagHeight = 1359.0;
-            double LLHeight = 275.4; //Height from floor to limelight
+            double LLHeight = 323.0; //Height from floor to limelight
             double LIMELIGHTCONSTANT = 0.0; //idk ben had this
 
             double theta = Math.toRadians(LLAngle - ty);
