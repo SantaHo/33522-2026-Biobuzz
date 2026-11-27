@@ -1,4 +1,3 @@
-//Actual main teleop
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -6,24 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.intakeindex;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
 
 @TeleOp(name = "Comp 2 RealMain", group = "TeleOp")
 public class RealMain extends LinearOpMode {
 
-
     private DcMotor turret;
     private Limelight3A limelight;
-
-    private Servo intake1,intake2;
     private static final double KP = 0.015;
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
@@ -35,30 +27,22 @@ public class RealMain extends LinearOpMode {
     public void runOpMode() {
         turret = hardwareMap.get(DcMotor.class, "motor");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+
         //HardwareMap stuff
-        //FieldCentricDrivetrain FieldCentricDrivetrain = new FieldCentricDrivetrain(hardwareMap);
         FieldCentricDrivetrain fielddrivetrain = new FieldCentricDrivetrain(hardwareMap);
         Drivetrain drivetrain = new Drivetrain(hardwareMap);
         intakeindex intakeindex = new intakeindex(hardwareMap);
-        //Turret turret = new Turret(hardwareMap);
-
+        Shooter shooter = new Shooter(hardwareMap);
 
         limelight.pipelineSwitch(0);
         limelight.start();
 
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Shooter shooter = new Shooter(hardwareMap);
 
         telemetry.addData("Status", "Ready to start");
         telemetry.update();
 
         waitForStart();
-
-        double intake1angle = intake1.getPosition();
-        double intake2angle = intake2.getPosition();
-        intake1.setPosition(intake1angle - 90);
-        intake2.setPosition(intake2angle - 90);
-
 
         while (opModeIsActive()) {
             //Driving
@@ -66,29 +50,24 @@ public class RealMain extends LinearOpMode {
             double forward = gamepad1.left_stick_y;
             double rotate  = -gamepad1.right_stick_x;
 
-            //FieldCentricDrivetrain.driveFieldCentric(forward, strafe, rotate);
-
             drivetrain.drive(forward, strafe, rotate);
 
             //reset field centric heading
             boolean resetfieldcentric  = gamepad1.dpad_up;
             if (resetfieldcentric) {
                 fielddrivetrain.resetYaw();
-
             }
 
             //intake
             if (gamepad1.b) {
-                intakeindex.intakereverse(1);//Reverse intake
+                intakeindex.intakereverse(1); //Reverse intake
             } else if (gamepad1.x) {
-                intakeindex.intake(1);
-                //Intake
+                intakeindex.intake(1); //Intake
             } else {
                 intakeindex.stopintake();
-
             }
 
-            //index control
+            //index control (toggle with A)
             boolean aPressed = gamepad1.a && !lastA;
 
             if (aPressed) {
@@ -102,16 +81,26 @@ public class RealMain extends LinearOpMode {
                 intakeindex.index(0);
             }
 
-            //Turret and Shooter
-            //Placeholder stuff
-            boolean error = false; // :]
-
-            telemetry.addData("Status", "Running");
-            telemetry.update();
-
+            //Limelight result check for target tracking and auto shooter spin-up
             LLResult result = limelight.getLatestResult();
+            boolean hasValidTarget = (result != null && result.isValid());
+            boolean rightTriggerPressed = (gamepad1.right_trigger > 0.1);
 
-            if (result != null && result.isValid()) {
+
+            if (hasValidTarget || rightTriggerPressed) {
+                shooter.setFlywheelPower(0.8);
+            } else {
+                shooter.setFlywheelPower(0.0);
+            }
+
+            if (rightTriggerPressed) {
+                intakeindex.index(1.0);
+            } else {
+                intakeindex.index(0.5);
+            }
+
+            //Turret tracking logic using Limelight tx
+            if (hasValidTarget) {
                 double tx = result.getTx();
                 double error1 = tx;
                 double power = 0;
@@ -134,6 +123,10 @@ public class RealMain extends LinearOpMode {
             } else {
                 turret.setPower(0);
             }
+
+            telemetry.addData("Status", "Running");
+            telemetry.addData("Valid Target", hasValidTarget);
+            telemetry.update();
         }
     }
 }
