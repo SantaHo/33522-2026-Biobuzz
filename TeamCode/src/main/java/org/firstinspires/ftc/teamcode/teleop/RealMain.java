@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 
-@TeleOp(name = "RealMain", group = "TeleOp")
+@TeleOp(name = "Comp 2 RealMain", group = "TeleOp")
 public class RealMain extends LinearOpMode {
 
 

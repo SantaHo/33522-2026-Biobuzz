@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode.old;
+package org.firstinspires.ftc.teamcode.old;
 //Check line 102 just to be safe
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "RealMain", group = "Linear Opmode")
+@TeleOp(name = "COMP1", group = "Linear Opmode")
 public class OldMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     private DcMotor intake, index, turret;
@@ -200,4 +200,3 @@ public class OldMain extends OpMode {
         motor.setVelocity(ticksPerSecond);
     }
 }
-*/
