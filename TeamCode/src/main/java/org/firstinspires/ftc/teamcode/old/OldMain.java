@@ -1,23 +1,29 @@
-package org.firstinspires.ftc.teamcode.old;
+/*package org.firstinspires.ftc.teamcode.old;
+//Check line 102 just to be safe
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "RealMain", group = "Linear Opmode")
 public class OldMain extends OpMode {
     private DcMotor frontLeft, backLeft, frontRight, backRight;
     private DcMotor intake, index, turret;
-    private DcMotor flywheel;
+    private DcMotorEx flywheel;
     private Servo hood;
     private Limelight3A limelight;
+    private float FlyPower;
     private static final double KP = 0.015;
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
     private static final double MIN_POWER = 0.08;
+
+    private static final double FlyMin = 4000; // In RMP
+    private static final double FlyMax = 5000; //In RPM
     //private IMU imu;
 
     //Drive variables
@@ -38,7 +44,7 @@ public class OldMain extends OpMode {
         turret = hardwareMap.get(DcMotor.class, "turret");
         index = hardwareMap.get(DcMotor.class, "index");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         hood = hardwareMap.get(Servo.class, "hood");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         //imu = hardwareMap.get(IMU.class, "imu");
@@ -99,17 +105,14 @@ public class OldMain extends OpMode {
         }
         lastA = gamepad1.a;
 
-        //Index Motor Control
+        //Index Motor Control FIX THiS BEFORE COMP WE JUST WANTED IT TO DEFULT OFF FOR TESTING!!!!!!
         if (indexOn) {
             index.setPower(0);
         } else {
             index.setPower(1);
         }
 
-        flywheel.setPower(0.75);
-        if (gamepad1.left_trigger > 0) {
-            flywheel.setPower(-0.5);
-        }
+
 
         //region DRIVE CONTROL
         strafe = -gamepad1.left_stick_x;
@@ -166,9 +169,16 @@ public class OldMain extends OpMode {
             } else {
                 turret.setPower(0);
             }
+            //FlyWheel Interpolation here
+
         } else {
             turret.setPower(0);
+            FlyPower = 4500; // idel speed if not locked
         }
+        if (gamepad1.left_trigger > 0) {
+            FlyPower = -500;
+        }
+        setMotorRPM(flywheel, FlyPower);
     }
 
     @Override
@@ -184,4 +194,10 @@ public class OldMain extends OpMode {
         telemetry.addData("Status", "Stopped");
         telemetry.update();
     }
+    public void setMotorRPM(DcMotorEx motor, double targetRPM) {
+        // Convert RPM to Revolutions Per Second, then multiply by ticks per revolution
+        double ticksPerSecond = (targetRPM / 60.0) * 28;
+        motor.setVelocity(ticksPerSecond);
+    }
 }
+*/
