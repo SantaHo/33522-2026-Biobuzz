@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
@@ -16,6 +18,8 @@ public class RealMain extends LinearOpMode {
 
     private DcMotor turret;
     private Limelight3A limelight;
+
+    private Servo intake1,intake2;
     private static final double KP = 0.015;
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
@@ -43,6 +47,11 @@ public class RealMain extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+        double intake1angle = intake1.getPosition();
+        double intake2angle = intake2.getPosition();
+        intake1.setPosition(intake1angle - 90);
+        intake2.setPosition(intake2angle - 90);
 
         while (opModeIsActive()) {
             //Driving
