@@ -1,8 +1,8 @@
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.dairy.foundation/releases/'}
-    google() // Needed for android
-}
+//repositories {
+    //mavenCentral()
+    //maven { url 'https://repo.dairy.foundation/releases/'}
+//    google() // Needed for android
+//}
 
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:12.0.0'
