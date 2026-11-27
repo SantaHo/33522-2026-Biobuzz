@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.subsystems.interpolate;
 @TeleOp(name = "interpolTest", group = "TeleOp")
-public class interpolTest {
-    public class interpoltest extends OpMode {
+public class interpolTest extends OpMode {
         Limelight3A limelight;
         interpolate test = new interpolate();
         LLResult llresult;
@@ -21,12 +20,11 @@ public class interpolTest {
         }
 
         @Override
-        public void loop(){
-            telemetry.addData("Speed: ",interpolate.rpm(llresult.getTy()));
-            telemetry.addData("TA: ",llresult.getTy());
+        public void loop() {
+            telemetry.addData("Speed: ", interpolate.rpm(llresult.getTy()));
+            telemetry.addData("TA: ", llresult.getTy());
             flywheel.setPower(interpolate.rpm(llresult.getTy()));
         }
-    }
 
 
 }
