@@ -15,8 +15,56 @@ public class Shooter {
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         hood = hardwareMap.get(Servo.class, "hood");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    //Probably some overcomplicated code that does nothing useful
+    //Control flywheel motor power
+    public void setFlywheelPower(double power) {
+        flywheel.setPower(power);
+    }
+
+    public double distanceFromTag(LLResult llresult) {
+        if (llresult != null && llresult.isValid()) {
+            double ty = llresult.getTy();
+
+            double LLAngle = 25.0; //angle
+            double tagHeight = 1359.0;
+            double LLHeight = 323.0; //Height from floor to limelight
+            double LIMELIGHTCONSTANT = 0.0; //idk ben had this
+
+            double theta = Math.toRadians(LLAngle - ty);
+            double heightDiff = tagHeight - LLHeight;
+            double distMm = heightDiff / Math.tan(theta);
+
+            //Convert to inches
+            return (distMm / 25.4) - LIMELIGHTCONSTANT;
+        }
+        return -1;
+    }
+
+    public static double hood(double x) {
+        //Known data points (must be sorted in ascending order of x)
+        double[] preX = new double[]{0, 1, 2, 3};
+        double[] preY = new double[]{0, 1, 2, 3};
+
+        //Edge case: if x is outside the bounds, clamp to minimum or maximum
+        if (x <= preX[0]) return preY[0];
+        if (x >= preX[preX.length - 1]) return preY[preY.length - 1];
+
+        //Find the segment [i, i+1] that contains x
+        for (int i = 0; i < preX.length - 1; i++) {
+            if (x >= preX[i] && x <= preX[i + 1]) {
+                //Linear interpolation formula: y = y0 + (x - x0) * (y1 - y0) / (x1 - x0)
+                double x0 = preX[i];
+                double x1 = preX[i + 1];
+                double y0 = preY[i];
+                double y1 = preY[i + 1];
+
+                return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
+            }
+        }
+
+        return 0;
+    }
 }
