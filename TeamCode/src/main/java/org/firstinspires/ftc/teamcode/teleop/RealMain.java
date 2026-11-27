@@ -13,9 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.intakeindex;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "Comp 2 RealMain", group = "TeleOp")
@@ -24,6 +22,8 @@ public class RealMain extends LinearOpMode {
 
     private DcMotor turret;
     private Limelight3A limelight;
+
+    private Servo intake1,intake2;
     private static final double KP = 0.015;
     private static final double DEADZONE = 1.0;
     private static final double MAX_POWER = 0.3;
@@ -53,6 +53,12 @@ public class RealMain extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+        double intake1angle = intake1.getPosition();
+        double intake2angle = intake2.getPosition();
+        intake1.setPosition(intake1angle - 90);
+        intake2.setPosition(intake2angle - 90);
+
 
         while (opModeIsActive()) {
             //Driving
